@@ -53,6 +53,7 @@ import {
 } from '../../errors';
 import { parseUserInput } from '../../input';
 import type { Paginated } from '../../pagination';
+import type { Fetch } from '../../request-options';
 import { validateWith } from '../../response';
 import { ServiceClient } from '../../ServiceClient';
 import { PerpsWebSocketHeartbeat } from '../heartbeat';
@@ -273,7 +274,11 @@ export type PerpsSessionOptions = {
   builderAttribution?: string | PerpsBuilderTermsInput;
   chainId: number;
   credentials: PerpsCredentials;
+  /** Fetch implementation for session HTTP requests. */
+  fetch?: Fetch;
   headers?: Record<string, string>;
+  /** Set false to disable HTTP transport retries. */
+  retry?: boolean;
   /**
    * Include this authenticated account's builder receipts in the session iterator.
    * Subscription is best effort and retried on reconnect; failure does not block the session.
@@ -384,7 +389,9 @@ export class PerpsSession implements AsyncIterable<PerpsSessionEvent> {
         ? parseUserInput(options.builderAttribution, EvmAddressSchema)
         : this.#builderAttribution?.builderAddress;
     this.#api = new ServiceClient({
+      fetch: options.fetch,
       headers: options.headers,
+      retry: options.retry,
       resolveHeaders: async () => this.#authenticatedHeaders(),
       root: options.restUrl,
     });
