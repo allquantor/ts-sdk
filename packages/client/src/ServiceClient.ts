@@ -52,6 +52,8 @@ type ServiceClientRequestOptions = RequestOptions & {
   /** Rate-limit bucket supplied by the action that owns the request. */
   rateLimitBucket?: RateLimitBucket;
   timeout?: ServiceClientTimeout;
+  /** Disable transport retries for commands whose outcome may be uncertain. */
+  retry?: false;
 };
 
 export type ServiceClientGetOptions = ServiceClientRequestOptions & {
@@ -270,6 +272,7 @@ export class ServiceClient {
         searchParams: request.params,
         signal: options.signal,
         ...(options.timeout !== undefined && { timeout: options.timeout }),
+        ...(options.retry === false && { retry: 0 }),
       }),
       options.signal,
     );

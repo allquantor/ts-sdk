@@ -54,6 +54,7 @@ import {
 export {
   ResolutionMarketType,
   ResolutionReporter,
+  ResolutionSettlementTimeBasis,
   ResolutionSource,
   ResolutionStatus,
 } from '@polymarket/bindings/data';
