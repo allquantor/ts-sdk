@@ -27,3 +27,6 @@ jobs:
 
       - name: Build
         run: pnpm build
+
+      - name: Verify Published Client Exports
+        run: pnpm --filter @polymarket/client test:package
